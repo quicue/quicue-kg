@@ -1,0 +1,121 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install CUE
+        uses: cue-lang/setup-cue@v1.0.1
+        with:
+          version: v0.15.3
+
+      - name: Validate schemas
+        run: cue vet ./core/ ./ext/ ./aggregate/ ./vocab/
+
+      - name: Validate positive tests
+        run: cue vet ./tests/valid/
+
+      - name: Validate negative tests
+        run: |
+          failed=0
+          for f in tests/invalid/*.cue; do
+            name=$(basename "$f" .cue)
+            if cue vet "$f" 2>/dev/null; then
+              echo "FAIL: $name should have been rejected"
+              failed=1
+            else
+              echo "OK: $name correctly rejected"
+            fi
+          done
+          [ "$failed" -eq 0 ]
+
+      - name: Validate examples
+        run: |
+          cue vet ./examples/minimal/
+          cue vet ./examples/full/
+
+      - name: Export vocab context
+        run: |
+          cue export ./vocab -e context --out json > /tmp/context.jsonld
+          python3 -c "
+          import json
+          with open('/tmp/context.jsonld') as f:
+              d = json.load(f)
+          assert '@context' in d, 'missing @context'
+          assert '@graph' in d, 'missing @graph'
+          ctx = d['@context']
+          for ns in ['kg','dcterms','prov','oa','dcat','rdfs','xsd']:
+              assert ns in ctx, f'missing namespace: {ns}'
+          ids = {e['@id'] for e in d['@graph']}
+          for t in ['kg:Decision','kg:Insight','kg:Rejected','kg:Pattern','kg:Derivation','kg:Context','kg:Workspace']:
+              assert t in ids, f'missing class: {t}'
+          print('Vocab context: all namespaces and types present')
+          "
+
+      - name: Module consumption test
+        run: |
+          mkdir -p /tmp/consumer/cue.mod/pkg/quicue.ca
+          ln -s "$GITHUB_WORKSPACE" /tmp/consumer/cue.mod/pkg/quicue.ca/kg
+          cat > /tmp/consumer/cue.mod/module.cue << 'EOF'
+          module: "test.example.com/consumer@v0"
+          language: version: "v0.9.0"
+          EOF
+          cat > /tmp/consumer/test.cue << 'EOF'
+          package test
+          import "quicue.ca/kg/core@v0"
+          d: core.#Decision & {
+              id: "ADR-001", title: "Test", status: "accepted"
+              date: "2026-01-01", context: "test", decision: "test"
+              rationale: "test", consequences: ["test"]
+          }
+          EOF
+          cd /tmp/consumer && cue vet .
+          echo "Module consumption: OK"
+
+  cli:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install CUE
+        uses: cue-lang/setup-cue@v1.0.1
+        with:
+          version: v0.15.3
+
+      - name: Test kg init
+        run: |
+          mkdir -p /tmp/test-project
+          cd /tmp/test-project
+          bash "$GITHUB_WORKSPACE/tools/kg" init 2>&1 | tee /tmp/init-output
+          [ -d .kg ]
+          [ -f .kg/cue.mod/module.cue ]
+          echo "kg init: OK"
+
+      - name: Test kg vet (on initialized project)
+        run: |
+          cd /tmp/test-project
+          # Add a minimal decision
+          cat > .kg/001-test.cue << 'EOF'
+          package kg
+          import "quicue.ca/kg/core@v0"
+          decisions: {
+              "ADR-001": core.#Decision & {
+                  id: "ADR-001", title: "Test decision", status: "accepted"
+                  date: "2026-01-01", context: "test", decision: "test"
+                  rationale: "test", consequences: ["test"]
+              }
+          }
+          EOF
+          # Need symlink for schema resolution
+          mkdir -p .kg/cue.mod/pkg/quicue.ca
+          ln -sf "$GITHUB_WORKSPACE" .kg/cue.mod/pkg/quicue.ca/kg
+          bash "$GITHUB_WORKSPACE/tools/kg" vet 2>&1
+          echo "kg vet: OK"
