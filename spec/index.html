@@ -618,19 +618,19 @@ import "quicue.ca/kg/core@v0"
 insights: {
     "INSIGHT-001": core.#Insight & {
         id:        "INSIGHT-001"
-        statement: "CUE transitive closure has a practical ceiling of ~17 nodes"
+        statement: "CUE graph validation performance depends on topology, not node count"
         evidence: [
-            "25-node graph times out at 5 minutes",
-            "18-node graph validates in under 4 seconds",
-            "Wide fan-in is worse than deep chains",
+            "18-node/27-edge NHCF graph validates in 3.8 seconds",
+            "17-node/25-edge greener-homes graph validates without issues",
+            "Wide fan-in (high edge density) is the bottleneck, not node count",
         ]
         method:     "experiment"
         confidence: "high"
         discovered: "2026-02-10"
 
-        implication: "Large graphs require precomputation outside CUE."
+        implication: "Graph complexity should be managed by reducing fan-in, not by capping node count."
         action_items: [
-            "Use Python precompute for graphs exceeding 17 nodes",
+            "Profile edge density before optimizing graph size",
         ]
     }
 }</pre>
