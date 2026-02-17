@@ -311,8 +311,8 @@ section "11. GitHub Pages accessibility"
 # ─────────────────────────────────────────────
 
 if command -v curl >/dev/null 2>&1; then
-    spec_url="https://quicue.github.io/quicue-kg/spec.html"
-    ctx_url="https://quicue.github.io/quicue-kg/context.jsonld"
+    spec_url="https://kg.quicue.ca/spec/"
+    ctx_url="https://kg.quicue.ca/context.jsonld"
 
     spec_status=$(curl -s -o /dev/null -w "%{http_code}" "$spec_url" 2>/dev/null) || true
     if [ "$spec_status" = "200" ]; then

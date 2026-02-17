@@ -618,19 +618,19 @@ import "quicue.ca/kg/core@v0"
 insights: {
     "INSIGHT-001": core.#Insight & {
         id:        "INSIGHT-001"
-        statement: "CUE transitive closure has a practical ceiling of ~17 nodes"
+        statement: "CUE graph validation performance depends on topology, not node count"
         evidence: [
-            "25-node graph times out at 5 minutes",
-            "18-node graph validates in under 4 seconds",
-            "Wide fan-in is worse than deep chains",
+            "18-node/27-edge NHCF graph validates in 3.8 seconds",
+            "17-node/25-edge greener-homes graph validates without issues",
+            "Wide fan-in (high edge density) is the bottleneck, not node count",
         ]
         method:     "experiment"
         confidence: "high"
         discovered: "2026-02-10"
 
-        implication: "Large graphs require precomputation outside CUE."
+        implication: "Graph complexity should be managed by reducing fan-in, not by capping node count."
         action_items: [
-            "Use Python precompute for graphs exceeding 17 nodes",
+            "Profile edge density before optimizing graph size",
         ]
     }
 }</pre>
@@ -1361,11 +1361,12 @@ index: aggregate.#KGIndex & {
     <h2>W3C Projection Semantics</h2>
 
     <p>
-      quicue-kg provides export projections from CUE-native types to three W3C vocabularies.
+      quicue-kg provides export projections from CUE-native types to W3C vocabularies,
+      RDF serialization formats, and logic programming languages.
       These projections are <em>one-way transformations</em>: CUE is the source of truth,
-      and W3C formats are interoperability surfaces. Each projection is a CUE type in the
+      and external formats are interoperability surfaces. Each projection is a CUE type in the
       <code>aggregate</code> package that takes a <code>#KGIndex</code> as input and
-      produces a [[JSON-LD]] document.
+      produces structured output (JSON-LD, RDF text, or logic programs).
     </p>
 
     <p>
@@ -1590,7 +1591,255 @@ cue export .kg/ -e _catalog.dataset --out json
 kg fed ~/project-a/.kg/ ~/project-b/.kg/ --format dcat</pre>
     </section>
 
-    <!-- 8.4 JSON-LD Context -->
+    <!-- 8.4 N-Triples -->
+    <section id="ntriples-projection">
+      <h3>N-Triples Projection (<code>#NTriples</code>)</h3>
+
+      <p>
+        The N-Triples projection produces the simplest possible RDF serialization: one
+        <code>&lt;subject&gt; &lt;predicate&gt; &lt;object&gt; .</code> triple per line, with
+        fully expanded IRIs (no prefixes). This format is greppable, sortable, and diffable —
+        ideal for unix pipeline processing and bulk loading into any triplestore.
+      </p>
+
+      <table class="def">
+        <thead>
+          <tr><th>Source (quicue-kg)</th><th></th><th>Target (RDF)</th><th>Semantics</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>#Decision</code></td>
+            <td class="mapping-arrow">&rarr;</td>
+            <td><code>kg:Decision</code>, <code>prov:Activity</code></td>
+            <td>Dual-typed: both a kg decision and a provenance activity.</td>
+          </tr>
+          <tr>
+            <td><code>#Insight</code></td>
+            <td class="mapping-arrow">&rarr;</td>
+            <td><code>kg:Insight</code>, <code>prov:Entity</code></td>
+            <td>Dual-typed: both a kg insight and a provenance entity.</td>
+          </tr>
+          <tr>
+            <td><code>#Pattern</code></td>
+            <td class="mapping-arrow">&rarr;</td>
+            <td><code>kg:Pattern</code></td>
+            <td>Pattern with <code>skos:prefLabel</code> for taxonomy interop.</td>
+          </tr>
+          <tr>
+            <td><code>ext.#SourceFile</code></td>
+            <td class="mapping-arrow">&rarr;</td>
+            <td><code>kg:SourceFile</code>, <code>prov:Entity</code></td>
+            <td>Data source with origin and format metadata.</td>
+          </tr>
+          <tr>
+            <td><code>ext.#CollectionProtocol</code></td>
+            <td class="mapping-arrow">&rarr;</td>
+            <td><code>kg:CollectionProtocol</code>, <code>prov:Plan</code></td>
+            <td>Data collection protocol as a provenance plan.</td>
+          </tr>
+          <tr>
+            <td><code>ext.#PipelineRun</code></td>
+            <td class="mapping-arrow">&rarr;</td>
+            <td><code>kg:PipelineRun</code>, <code>prov:Activity</code></td>
+            <td>Pipeline execution with <code>prov:used</code> links to sources.</td>
+          </tr>
+          <tr>
+            <td><code>ext.#Derivation</code></td>
+            <td class="mapping-arrow">&rarr;</td>
+            <td><code>kg:Derivation</code>, <code>prov:Activity</code></td>
+            <td>Derived output with canon purity tracking.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <pre class="example" title="N-Triples export command">
+cue export .kg/ -e _ntriples.triples --out text</pre>
+
+      <pre class="example" title="N-Triples unix pipeline">
+# Count triples by type
+cue export .kg/ -e _ntriples.triples --out text | grep 'rdf-syntax-ns#type' | sort | uniq -c
+
+# Find all provenance activities
+cue export .kg/ -e _ntriples.triples --out text | grep 'prov#Activity'</pre>
+    </section>
+
+    <!-- 8.5 Turtle -->
+    <section id="turtle-projection">
+      <h3>Turtle Projection (<code>#Turtle</code>)</h3>
+
+      <p>
+        The Turtle projection produces human-readable RDF with <code>@prefix</code>
+        declarations and subject grouping. It uses the same mappings as N-Triples
+        but with compact prefixed names. The output is compatible with existing Turtle
+        files in infra-ontology and can be loaded directly into Oxigraph or any
+        SPARQL endpoint.
+      </p>
+
+      <p>
+        The document is organized by section: decisions, insights, patterns, sources,
+        collection protocols, pipeline runs, and derivations. Each section uses standard
+        RDF vocabularies (<code>prov:</code>, <code>dcterms:</code>, <code>skos:</code>,
+        <code>rdfs:</code>) alongside the <code>kg:</code> namespace.
+      </p>
+
+      <pre class="example" title="Turtle export command">
+cue export .kg/ -e _turtle.document --out text</pre>
+    </section>
+
+    <!-- 8.6 SKOS -->
+    <section id="skos-projection">
+      <h3>SKOS Taxonomy (<code>#SKOSTaxonomy</code>)</h3>
+
+      <p>
+        The SKOS projection maps the project's pattern categories to a
+        <code>skos:ConceptScheme</code> and individual patterns to
+        <code>skos:Concept</code> instances. Categories are top concepts;
+        patterns are narrower concepts within their category. This produces
+        a browsable taxonomy of the project's pattern language.
+      </p>
+
+      <table class="def">
+        <thead>
+          <tr><th>Source (quicue-kg)</th><th></th><th>Target (SKOS)</th><th>Semantics</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Pattern categories</td>
+            <td class="mapping-arrow">&rarr;</td>
+            <td><code>skos:Concept</code> (<code>skos:topConceptOf</code>)</td>
+            <td>Category as a top-level concept.</td>
+          </tr>
+          <tr>
+            <td><code>#Pattern</code></td>
+            <td class="mapping-arrow">&rarr;</td>
+            <td><code>skos:Concept</code></td>
+            <td>Pattern as a concept with <code>skos:broader</code> to its category.</td>
+          </tr>
+          <tr>
+            <td><code>#Pattern.name</code></td>
+            <td class="mapping-arrow">&rarr;</td>
+            <td><code>skos:prefLabel</code></td>
+            <td>Preferred label.</td>
+          </tr>
+          <tr>
+            <td><code>#Pattern.problem</code></td>
+            <td class="mapping-arrow">&rarr;</td>
+            <td><code>skos:definition</code></td>
+            <td>The problem the pattern solves.</td>
+          </tr>
+          <tr>
+            <td><code>#Pattern.solution</code></td>
+            <td class="mapping-arrow">&rarr;</td>
+            <td><code>skos:note</code></td>
+            <td>The solution approach.</td>
+          </tr>
+          <tr>
+            <td><code>#Pattern.related</code></td>
+            <td class="mapping-arrow">&rarr;</td>
+            <td><code>skos:related</code></td>
+            <td>Associative relationship between patterns.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p>
+        The projection outputs both JSON-LD (<code>_taxonomy.graph</code>) and
+        Turtle (<code>_taxonomy.turtle</code>). It also produces a summary with
+        concept and category counts.
+      </p>
+
+      <pre class="example" title="SKOS export commands">
+# JSON-LD concept scheme
+cue export .kg/ -e _taxonomy.graph --out json
+
+# Turtle for compatibility with existing SKOS files
+cue export .kg/ -e _taxonomy.turtle --out text</pre>
+    </section>
+
+    <!-- 8.7 Prolog -->
+    <section id="prolog-projection">
+      <h3>Prolog Projection (<code>#Prolog</code>)</h3>
+
+      <p>
+        The Prolog projection generates facts and inference rules from knowledge graph
+        entries. Unlike RDF projections that describe data, the Prolog projection makes
+        knowledge <em>computable</em>: you can query transitive provenance chains, determine
+        trust levels, and discover shared patterns across projects.
+      </p>
+
+      <p>
+        Facts are generated for each entry type. Rules encode inference logic:
+      </p>
+
+      <table class="def">
+        <thead>
+          <tr><th>Rule</th><th>Semantics</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>contributed(Source, Deriv)</code></td>
+            <td>Transitive provenance: which sources contributed to a derivation.</td>
+          </tr>
+          <tr>
+            <td><code>trust(Proto, Level)</code></td>
+            <td>Trust level (high/medium/low) based on protocol authority rank.</td>
+          </tr>
+          <tr>
+            <td><code>most_authoritative(System, Proto)</code></td>
+            <td>Most authoritative protocol for a given system.</td>
+          </tr>
+          <tr>
+            <td><code>shared_pattern(P, Proj1, Proj2)</code></td>
+            <td>Patterns used in more than one project.</td>
+          </tr>
+          <tr>
+            <td><code>active_decision(Id)</code></td>
+            <td>Decisions with status "accepted".</td>
+          </tr>
+          <tr>
+            <td><code>actionable(Id)</code></td>
+            <td>High-confidence insights.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <pre class="example" title="Prolog export and query">
+# Export Prolog program
+cue export .kg/ -e _prolog.program --out text > kb.pl
+
+# Query in SWI-Prolog
+swipl -l kb.pl -g "shared_pattern(P, A, B), writef('%w shared by %w and %w\n', [P, A, B]), fail."</pre>
+    </section>
+
+    <!-- 8.8 Datalog -->
+    <section id="datalog-projection">
+      <h3>Datalog Projection (<code>#Datalog</code>)</h3>
+
+      <p>
+        The Datalog projection generates Souffl&eacute;-compatible Datalog programs. Unlike
+        Prolog, Datalog <em>always terminates</em> &mdash; there are no function symbols, no
+        cuts, no negation-as-failure cycles. This makes it safe for automated infrastructure
+        queries at scale.
+      </p>
+
+      <p>
+        The program includes <code>.decl</code> relation declarations, <code>.output</code>
+        directives for derived relations, facts from the knowledge graph, and the same
+        inference rules as the Prolog projection. Souffl&eacute; compiles these to native
+        C++ for high-performance evaluation.
+      </p>
+
+      <pre class="example" title="Datalog export and evaluation">
+# Export Soufflé-compatible Datalog
+cue export .kg/ -e _datalog.program --out text > kb.dl
+
+# Evaluate with Soufflé
+souffle kb.dl
+
+# Results are written to .csv files (one per .output relation)</pre>
+    </section>
+
+    <!-- 8.9 JSON-LD Context -->
     <section id="jsonld-context">
       <h3>JSON-LD Context</h3>
 
