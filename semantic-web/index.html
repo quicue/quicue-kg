@@ -1,0 +1,924 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="CUE-native knowledge graph framework">
+      
+      
+      
+        <link rel="canonical" href="https://kg.quicue.ca/semantic-web/">
+      
+      
+        <link rel="prev" href="..">
+      
+      
+        <link rel="next" href="../specification/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+    
+    
+      
+        <title>Semantic Web - quicue-kg</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="teal" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#semantic-web-logic-projections" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="quicue-kg" class="md-header__button md-logo" aria-label="quicue-kg" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            quicue-kg
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Semantic Web
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/quicue/quicue-kg" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    quicue/quicue-kg
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="quicue-kg" class="md-nav__button md-logo" aria-label="quicue-kg" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    quicue-kg
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/quicue/quicue-kg" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    quicue/quicue-kg
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Semantic Web
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Semantic Web
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#rdf-in-60-seconds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RDF in 60 seconds
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#projection-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Projection architecture
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#format-catalog" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Format catalog
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Format catalog">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#rdf-serializations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RDF serializations
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#semantic-vocabularies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Semantic vocabularies
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#logic-programming" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Logic programming
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#choosing-a-format" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Choosing a format
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#namespace" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Namespace
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../specification/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Specification
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#rdf-in-60-seconds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RDF in 60 seconds
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#projection-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Projection architecture
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#format-catalog" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Format catalog
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Format catalog">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#rdf-serializations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RDF serializations
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#semantic-vocabularies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Semantic vocabularies
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#logic-programming" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Logic programming
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#choosing-a-format" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Choosing a format
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#namespace" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Namespace
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="semantic-web-logic-projections">Semantic Web &amp; Logic Projections</h1>
+<p>quicue-kg exports knowledge graph data to RDF, SKOS, and logic programming formats. This page explains the data model, available formats, and when to use each one.</p>
+<h2 id="rdf-in-60-seconds">RDF in 60 seconds</h2>
+<p>RDF (Resource Description Framework) stores data as <strong>triples</strong>: subject-predicate-object statements.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>&lt;kg:ADR-001&gt;  &lt;rdf:type&gt;        &lt;kg:Decision&gt; .
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>&lt;kg:ADR-001&gt;  &lt;rdfs:label&gt;      &quot;Use PostgreSQL&quot; .
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>&lt;kg:ADR-001&gt;  &lt;prov:startedAt&gt;  &quot;2026-01-15&quot; .
+</code></pre></div>
+<p>Every fact is one triple. Triples compose — you can merge two RDF datasets by concatenating their triples. Subjects and predicates are IRIs (URIs); objects are IRIs or literal values. That's the entire model.</p>
+<p>The advantage: any tool that speaks RDF can query your knowledge graph. SPARQL endpoints, Oxigraph, Jena, rdflib — they all consume this format directly.</p>
+<h2 id="projection-architecture">Projection architecture</h2>
+<p>All projections live in <code>kg/aggregate/</code> and follow the same pattern:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>#SomeProjection: {
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>    index: #KGIndex          // Input: the computed index
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    graph: { ... }            // Output: structured data
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>    summary: { ... }          // Metadata: counts, stats
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>}
+</code></pre></div>
+<p>CUE comprehensions iterate over the index and emit structured output. The projections are one-way: CUE is the source of truth, external formats are interoperability surfaces. You never edit the RDF — you edit the <code>.kg/</code> CUE files and re-export.</p>
+<h2 id="format-catalog">Format catalog</h2>
+<h3 id="rdf-serializations">RDF serializations</h3>
+<p>These three formats express the same RDF data model in different wire formats:</p>
+<table>
+<thead>
+<tr>
+<th>Format</th>
+<th>File</th>
+<th>Type</th>
+<th>Best for</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>N-Triples</strong></td>
+<td><code>ntriples.cue</code></td>
+<td><code>#NTriples</code></td>
+<td><code>grep</code>, <code>sort</code>, <code>diff</code>, bulk loading</td>
+</tr>
+<tr>
+<td><strong>Turtle</strong></td>
+<td><code>turtle.cue</code></td>
+<td><code>#Turtle</code></td>
+<td>Human reading, SPARQL endpoint import</td>
+</tr>
+<tr>
+<td><strong>JSON-LD</strong></td>
+<td><code>provenance.cue</code></td>
+<td><code>#Provenance</code></td>
+<td>Web APIs, browser consumption</td>
+</tr>
+</tbody>
+</table>
+<p><strong>N-Triples</strong> is the simplest: one triple per line, fully expanded IRIs, no prefixes. Perfect for unix pipelines:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Export and grep for all provenance activities</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>cue<span class="w"> </span><span class="nb">export</span><span class="w"> </span>.kg/<span class="w"> </span>-e<span class="w"> </span>_ntriples.triples<span class="w"> </span>--out<span class="w"> </span>text<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s1">&#39;prov#Activity&#39;</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Count triples by predicate</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>cue<span class="w"> </span><span class="nb">export</span><span class="w"> </span>.kg/<span class="w"> </span>-e<span class="w"> </span>_ntriples.triples<span class="w"> </span>--out<span class="w"> </span>text<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;{print $2}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span><span class="p">|</span><span class="w"> </span>uniq<span class="w"> </span>-c<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-rn
+</code></pre></div>
+<p><strong>Turtle</strong> adds prefix declarations and groups triples by subject. Produces the same data as N-Triples but readable:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="k">@prefix</span><span class="w"> </span><span class="nn">kg:</span><span class="w"> </span><span class="nv">&lt;https://quicue.ca/kg#&gt;</span><span class="w"> </span><span class="p">.</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="k">@prefix</span><span class="w"> </span><span class="nn">prov:</span><span class="w"> </span><span class="nv">&lt;http://www.w3.org/ns/prov#&gt;</span><span class="w"> </span><span class="p">.</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="nn">kg</span><span class="p">:</span><span class="nt">ADR-001</span> <span class="kt">a</span> <span class="nn">kg</span><span class="p">:</span><span class="nt">Decision</span><span class="p">,</span> <span class="nn">prov</span><span class="p">:</span><span class="nt">Activity</span> <span class="p">;</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>    <span class="nn">rdfs</span><span class="p">:</span><span class="nt">label</span> <span class="s">&quot;Use PostgreSQL&quot;</span> <span class="p">;</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>    <span class="nn">prov</span><span class="p">:</span><span class="nt">startedAtTime</span> <span class="s">&quot;2026-01-15&quot;</span><span class="p">^^</span><span class="nn">xsd</span><span class="p">:</span><span class="nt">date</span> <span class="p">.</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>cue<span class="w"> </span><span class="nb">export</span><span class="w"> </span>.kg/<span class="w"> </span>-e<span class="w"> </span>_turtle.document<span class="w"> </span>--out<span class="w"> </span>text
+</code></pre></div>
+<p><strong>JSON-LD</strong> is JSON with <code>@context</code> mapping keys to IRIs. The PROV-O, DCAT, and Web Annotation projections all emit JSON-LD:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>cue<span class="w"> </span><span class="nb">export</span><span class="w"> </span>.kg/<span class="w"> </span>-e<span class="w"> </span>_provenance.graph<span class="w"> </span>--out<span class="w"> </span>json
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>cue<span class="w"> </span><span class="nb">export</span><span class="w"> </span>.kg/<span class="w"> </span>-e<span class="w"> </span>_catalog.dataset<span class="w"> </span>--out<span class="w"> </span>json
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>cue<span class="w"> </span><span class="nb">export</span><span class="w"> </span>.kg/<span class="w"> </span>-e<span class="w"> </span>_annotations.graph<span class="w"> </span>--out<span class="w"> </span>json
+</code></pre></div>
+<h3 id="semantic-vocabularies">Semantic vocabularies</h3>
+<p>These projections add vocabulary-specific semantics on top of the raw data:</p>
+<table>
+<thead>
+<tr>
+<th>Projection</th>
+<th>Vocabulary</th>
+<th>Type</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>PROV-O</strong></td>
+<td>W3C Provenance</td>
+<td><code>#Provenance</code></td>
+<td>Decision audit trails, provenance chains</td>
+</tr>
+<tr>
+<td><strong>DCAT</strong></td>
+<td>Data Catalog</td>
+<td><code>#DatasetEntry</code></td>
+<td>Register projects in data catalogs</td>
+</tr>
+<tr>
+<td><strong>Web Annotation</strong></td>
+<td>W3C Annotation</td>
+<td><code>#Annotations</code></td>
+<td>Insights/rejected as scholarly annotations</td>
+</tr>
+<tr>
+<td><strong>SKOS</strong></td>
+<td>Simple Knowledge Org</td>
+<td><code>#SKOSTaxonomy</code></td>
+<td>Pattern categories as browsable taxonomy</td>
+</tr>
+</tbody>
+</table>
+<p><strong>SKOS</strong> is particularly useful for navigating patterns. It maps pattern categories to <code>skos:Concept</code> top concepts and individual patterns to narrower concepts within them:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># JSON-LD concept scheme</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>cue<span class="w"> </span><span class="nb">export</span><span class="w"> </span>.kg/<span class="w"> </span>-e<span class="w"> </span>_taxonomy.graph<span class="w"> </span>--out<span class="w"> </span>json
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Turtle for import into existing SKOS taxonomies</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>cue<span class="w"> </span><span class="nb">export</span><span class="w"> </span>.kg/<span class="w"> </span>-e<span class="w"> </span>_taxonomy.turtle<span class="w"> </span>--out<span class="w"> </span>text
+</code></pre></div>
+<h3 id="logic-programming">Logic programming</h3>
+<p>These projections export <strong>facts + inference rules</strong>, not graph data. They make knowledge computable:</p>
+<table>
+<thead>
+<tr>
+<th>Projection</th>
+<th>Runtime</th>
+<th>Type</th>
+<th>Terminates?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Prolog</strong></td>
+<td>SWI-Prolog</td>
+<td><code>#Prolog</code></td>
+<td>No (Turing-complete)</td>
+</tr>
+<tr>
+<td><strong>Datalog</strong></td>
+<td>Souffl&eacute;</td>
+<td><code>#Datalog</code></td>
+<td>Yes (guaranteed)</td>
+</tr>
+</tbody>
+</table>
+<p>Both include 6 inference rules:</p>
+<ul>
+<li><code>contributed(Source, Deriv)</code> — transitive provenance (what sources fed into a derivation?)</li>
+<li><code>trust(Proto, Level)</code> — trust levels from protocol authority ranks</li>
+<li><code>most_authoritative(System, Proto)</code> — best protocol per system</li>
+<li><code>shared_pattern(P, Proj1, Proj2)</code> — patterns used across multiple projects</li>
+<li><code>active_decision(Id)</code> — accepted decisions</li>
+<li><code>actionable(Id)</code> — high-confidence insights</li>
+</ul>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Export Prolog program</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>cue<span class="w"> </span><span class="nb">export</span><span class="w"> </span>.kg/<span class="w"> </span>-e<span class="w"> </span>_prolog.program<span class="w"> </span>--out<span class="w"> </span>text<span class="w"> </span>&gt;<span class="w"> </span>kb.pl
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Query: which patterns are shared between projects?</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>swipl<span class="w"> </span>-l<span class="w"> </span>kb.pl<span class="w"> </span>-g<span class="w"> </span><span class="s2">&quot;shared_pattern(P, A, B), format(&#39;~w shared by ~w and ~w~n&#39;, [P, A, B]), fail.&quot;</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c1"># Export Datalog (guaranteed termination, compiles to C++)</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>cue<span class="w"> </span><span class="nb">export</span><span class="w"> </span>.kg/<span class="w"> </span>-e<span class="w"> </span>_datalog.program<span class="w"> </span>--out<span class="w"> </span>text<span class="w"> </span>&gt;<span class="w"> </span>kb.dl
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>souffle<span class="w"> </span>kb.dl
+</code></pre></div>
+<p><strong>When to use Prolog vs Datalog:</strong> Use Prolog when you need recursive queries, negation-as-failure, or interactive exploration. Use Datalog when you need guaranteed termination (e.g., automated CI checks) or when evaluating over large datasets (Souffl&eacute; compiles to native code).</p>
+<h2 id="choosing-a-format">Choosing a format</h2>
+<table>
+<thead>
+<tr>
+<th>I want to...</th>
+<th>Use</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Load into a triplestore (Oxigraph, Jena)</td>
+<td>Turtle or N-Triples</td>
+</tr>
+<tr>
+<td>Process with unix tools (grep, sort, diff)</td>
+<td>N-Triples</td>
+</tr>
+<tr>
+<td>Serve from a web API</td>
+<td>JSON-LD (PROV-O, DCAT, or Annotations)</td>
+</tr>
+<tr>
+<td>Browse patterns as a taxonomy</td>
+<td>SKOS</td>
+</tr>
+<tr>
+<td>Query provenance chains</td>
+<td>Prolog or Datalog</td>
+</tr>
+<tr>
+<td>Run automated checks in CI</td>
+<td>Datalog (always terminates)</td>
+</tr>
+<tr>
+<td>Register in a data catalog</td>
+<td>DCAT</td>
+</tr>
+<tr>
+<td>Human-readable audit trail</td>
+<td>Turtle or PROV-O JSON-LD</td>
+</tr>
+</tbody>
+</table>
+<h2 id="namespace">Namespace</h2>
+<p>All projections use the <code>kg:</code> namespace prefix, which resolves to <code>https://quicue.ca/kg#</code>. The full JSON-LD context is defined in <code>vocab/context.cue</code> and published at <code>kg.quicue.ca/context.jsonld</code>.</p>
+<p>Standard prefixes used across projections:</p>
+<table>
+<thead>
+<tr>
+<th>Prefix</th>
+<th>IRI</th>
+<th>Vocabulary</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>kg:</code></td>
+<td><code>https://quicue.ca/kg#</code></td>
+<td>quicue-kg types</td>
+</tr>
+<tr>
+<td><code>prov:</code></td>
+<td><code>http://www.w3.org/ns/prov#</code></td>
+<td>W3C Provenance</td>
+</tr>
+<tr>
+<td><code>dcat:</code></td>
+<td><code>http://www.w3.org/ns/dcat#</code></td>
+<td>Data Catalog</td>
+</tr>
+<tr>
+<td><code>oa:</code></td>
+<td><code>http://www.w3.org/ns/oa#</code></td>
+<td>Web Annotation</td>
+</tr>
+<tr>
+<td><code>skos:</code></td>
+<td><code>http://www.w3.org/2004/02/skos/core#</code></td>
+<td>Knowledge Organization</td>
+</tr>
+<tr>
+<td><code>dcterms:</code></td>
+<td><code>http://purl.org/dc/terms/</code></td>
+<td>Dublin Core Terms</td>
+</tr>
+<tr>
+<td><code>rdfs:</code></td>
+<td><code>http://www.w3.org/2000/01/rdf-schema#</code></td>
+<td>RDF Schema</td>
+</tr>
+<tr>
+<td><code>rdf:</code></td>
+<td><code>http://www.w3.org/1999/02/22-rdf-syntax-ns#</code></td>
+<td>RDF Syntax</td>
+</tr>
+</tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/quicue/quicue-kg" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.sections", "search.highlight", "content.code.copy"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>
