@@ -100,6 +100,9 @@ CUE's type system gives properties that are hard to get from traditional knowled
 | `#Derivation` | Data pipeline audit trails tracking how outputs relate to source data |
 | `#Workspace` | Multi-repo topology mapping |
 | `#Context` | Project identity and self-description |
+| `#SourceFile` | Source artifact tracking with SHA256 and origin metadata |
+| `#CollectionProtocol` | Repeatable data collection procedures (maps to prov:Plan) |
+| `#PipelineRun` | Single pipeline execution event (maps to prov:Activity) |
 
 ### Aggregation (`aggregate/`)
 

@@ -36,7 +36,7 @@ function runCue(args, kgDir) {
 
 const server = new McpServer({
   name: 'quicue-kg',
-  version: '0.1.0',
+  version: '0.1.1',
 }, {
   instructions: 'Knowledge graph tools for querying decisions, patterns, insights, and rejected approaches. Check rejected approaches BEFORE suggesting solutions.',
 });
