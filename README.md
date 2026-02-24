@@ -203,6 +203,7 @@ quicue-kg is part of the [quicue](https://github.com/quicue) ecosystem:
 
 - **[apercue.ca](https://github.com/quicue/apercue)** --- Generic graph patterns + W3C projections (Layer 0)
 - **[quicue.ca](https://github.com/quicue/quicue.ca)** --- Infrastructure-specific patterns (Layer 1)
+- **[grdn](https://gitlab.com/mthdn/grdn)** --- Production Kubernetes on Proxmox (Layer 2)
 - **[cmhc-retrofit](https://github.com/quicue/cmhc-retrofit)** --- Construction PM instance (Layer 2)
 
 quicue-kg provides the knowledge layer: architectural decisions, patterns, insights, and rejected approaches tracked in `.kb/` directories across all projects.
